@@ -46,15 +46,6 @@
     @apply bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-full font-medium shadow-premium hover:shadow-premium-hover transition-all duration-300 active:scale-95;
   }
 
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-}
-  
   .btn-secondary {
     @apply bg-surface hover:bg-surface-container text-primary px-6 py-2.5 rounded-full font-medium shadow-premium transition-all duration-300;
   }
@@ -70,7 +61,6 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
