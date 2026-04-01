@@ -5,9 +5,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AddStudentModal from '../components/AddStudentModal';
 
 const Students = () => {
-  const { students, removeStudent } = useApp();
+  const { students, removeStudent, searchQuery, setSearchQuery } = useApp();
   const [activeMenu, setActiveMenu] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const filteredStudents = students.filter(student => {
+    const query = searchQuery.toLowerCase();
+    return (
+      student.name?.toLowerCase().includes(query) ||
+      student.course?.toLowerCase().includes(query) ||
+      student.id?.toString().includes(query)
+    );
+  });
 
   return (
     <div className="space-y-6">
@@ -21,7 +30,9 @@ const Students = () => {
           <Search size={18} className="text-surface-dim" />
           <input 
             type="text" 
-            placeholder="Search by name, ID or course..." 
+            placeholder="Search name, course or ID..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="border-none bg-transparent focus:ring-0 text-sm w-full outline-none"
           />
         </div>
@@ -53,7 +64,7 @@ const Students = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-container">
-              {students.map((student) => (
+              {filteredStudents.map((student) => (
                 <tr key={student.id} className="hover:bg-surface-container/30 transition-colors group">
                   <td className="py-4 px-6 font-semibold">{student.name}</td>
                   <td className="py-4 px-6 text-sm text-[#414754] font-mono">{student.id}</td>
@@ -104,14 +115,21 @@ const Students = () => {
                   </td>
                 </tr>
               ))}
+              {filteredStudents.length === 0 && (
+                <tr>
+                  <td colSpan="6" className="py-20 text-center text-surface-dim italic">
+                    No results found for "{searchQuery}"
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
         <div className="p-4 bg-surface-container/20 flex items-center justify-between">
           <p className="text-sm text-[#414754]">
-            {students.length > 0 
-              ? `Showing all ${students.length} students` 
-              : 'No students to show'}
+            {filteredStudents.length > 0 
+              ? `Showing ${filteredStudents.length} of ${students.length} students` 
+              : 'No results found'}
           </p>
           <div className="flex gap-2">
             <button disabled className="px-3 py-1 rounded border border-surface-container text-surface-dim text-sm">Prev</button>

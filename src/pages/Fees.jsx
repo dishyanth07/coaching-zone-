@@ -2,17 +2,25 @@ import { IndianRupee, Send, Download, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 const Fees = () => {
-  const { fees, updateFeeStatus } = useApp();
+  const { fees, updateFeeStatus, searchQuery } = useApp();
   
   const handleMarkAsPaid = async (id) => {
     await updateFeeStatus(id, 'paid');
   };
 
+  const filteredFees = fees.filter(fee => {
+    const query = searchQuery.toLowerCase();
+    return (
+      fee.students?.name?.toLowerCase().includes(query) ||
+      fee.students?.course?.toLowerCase().includes(query)
+    );
+  });
+
   const exportToCSV = () => {
-    if (fees.length === 0) return;
+    if (filteredFees.length === 0) return;
     
     const headers = ['Student Name', 'Course', 'Amount', 'Status', 'Due Date'];
-    const rows = fees.map(f => [
+    const rows = filteredFees.map(f => [
       f.students?.name || 'Unknown',
       f.students?.course || '-',
       f.amount,
@@ -75,12 +83,19 @@ const Fees = () => {
       <div className="premium-card p-0 overflow-hidden">
         <div className="p-6 border-b border-surface-container flex items-center justify-between">
           <h3 className="font-bold text-lg">Student Fee Status</h3>
-          <button 
-            onClick={exportToCSV}
-            className="flex items-center gap-2 text-primary font-bold text-sm hover:underline"
-          >
-            <Download size={16} /> Export CSV
-          </button>
+          <div className="flex gap-4 items-center">
+            {searchQuery && (
+              <span className="text-xs font-bold bg-primary/10 text-primary px-3 py-1 rounded-full">
+                Filtering for: "{searchQuery}"
+              </span>
+            )}
+            <button 
+              onClick={exportToCSV}
+              className="flex items-center gap-2 text-primary font-bold text-sm hover:underline"
+            >
+              <Download size={16} /> Export CSV
+            </button>
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left min-w-[800px]">
@@ -94,8 +109,8 @@ const Fees = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-container">
-              {fees.length > 0 ? (
-                fees.map((fee) => (
+              {filteredFees.length > 0 ? (
+                filteredFees.map((fee) => (
                   <tr key={fee.id} className="hover:bg-surface-container/30 transition-colors">
                     <td className="py-4 px-6">
                       <p className="font-semibold">{fee.students?.name || 'Unknown Student'}</p>
@@ -137,8 +152,8 @@ const Fees = () => {
               ) : (
                 <tr>
                   <td colSpan="5" className="py-20 text-center text-surface-dim italic">
-                    <p className="text-lg mb-2">No fee records found.</p>
-                    <p className="text-sm">New students will automatically receive a fee entry.</p>
+                    <p className="text-lg mb-2">No records found for "{searchQuery}"</p>
+                    <p className="text-sm">Try searching for a different name or course.</p>
                   </td>
                 </tr>
               )}

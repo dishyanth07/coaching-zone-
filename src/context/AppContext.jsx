@@ -20,6 +20,7 @@ export const AppProvider = ({ children }) => {
   const [fees, setFees] = useState([]);
   const [attendanceHistory, setAttendanceHistory] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchData = async () => {
     setLoading(true);
@@ -252,6 +253,8 @@ export const AppProvider = ({ children }) => {
     attendanceHistory,
     loading,
     setLoading,
+    searchQuery,
+    setSearchQuery,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 
 const Dashboard = () => {
-  const { students, courses, fees, attendanceHistory } = useApp();
+  const { students, courses, fees, attendanceHistory, searchQuery } = useApp();
 
   // 1. Stats Calculations
   const pendingFeeTotal = fees
@@ -49,7 +49,12 @@ const Dashboard = () => {
     { label: 'Active Courses', value: courses.length.toString(), change: 'Live', color: 'bg-tertiary/10 text-tertiary' },
   ];
 
-  const recentStudents = students.slice(0, 5);
+  const recentStudents = students
+    .filter(s => 
+      s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      s.course.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .slice(0, 5);
 
   return (
     <div className="space-y-6">

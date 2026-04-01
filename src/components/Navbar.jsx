@@ -1,7 +1,10 @@
 import React from 'react';
 import { Search, Bell, User } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 const Navbar = ({ title }) => {
+  const { searchQuery, setSearchQuery } = useApp();
+
   return (
     <header className="h-16 flex items-center justify-between px-4 md:px-8 bg-surface-background/80 backdrop-blur-md sticky top-0 z-30">
       <div className="flex items-center gap-4">
@@ -18,6 +21,8 @@ const Navbar = ({ title }) => {
           <input 
             type="text" 
             placeholder="Search anything..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 pr-4 py-2 bg-white border-none rounded-full shadow-premium text-sm focus:ring-2 focus:ring-primary/20 w-48 xl:w-64 transition-all"
           />
         </div>

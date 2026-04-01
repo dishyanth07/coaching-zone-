@@ -3,8 +3,7 @@ import { CheckCircle, XCircle, Search, Save, Calendar as CalendarIcon, UserCheck
 import { useApp } from '../context/AppContext';
 
 const Attendance = () => {
-  const { students, saveAttendance } = useApp();
-  const [searchTerm, setSearchTerm] = useState('');
+  const { students, saveAttendance, searchQuery, setSearchQuery } = useApp();
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [attendance, setAttendance] = useState({}); // { studentId: 'present' | 'absent' }
   const [isSaving, setIsSaving] = useState(false);
@@ -31,8 +30,8 @@ const Attendance = () => {
   };
 
   const filteredStudents = students.filter(s => 
-    s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.course.toLowerCase().includes(searchTerm.toLowerCase())
+    s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.course.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const presentCount = Object.values(attendance).filter(v => v === 'present').length;
@@ -89,8 +88,8 @@ const Attendance = () => {
             <input 
               type="text" 
               placeholder="Search students..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 bg-surface-container rounded-xl outline-none focus:ring-2 ring-primary/20 transition-all font-medium"
             />
           </div>
